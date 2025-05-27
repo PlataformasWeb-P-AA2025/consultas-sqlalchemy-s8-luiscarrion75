@@ -1,6 +1,5 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import and_
 
 # se importan las clases del 
 # archivo clases.py
@@ -38,3 +37,17 @@ for entrega in entregas:
           f"Calificación: {entrega.calificacion}, Instructor: {entrega.tarea.curso.instructor.nombre}, "
           f"Departamento: {entrega.tarea.curso.departamento.nombre}")
 
+# Consulta02
+# Todos los departamentos que tengan notas de entregas menores o iguales a 0.3 .
+# En función de los departamentos, presentar el nombre del departamento
+# y el número de cursos que tiene cada departamento
+
+departamentos = session.query(Departamento)\
+        .join(Departamento.cursos)\
+        .join(Curso.tareas)\
+        .join(Tarea.entregas)\
+        .filter(Entrega.calificación <= 0.3)\
+        .all()
+
+for departamento,num_cursos in departamentos:
+    print(f"Departamento: {Departamento.nombre}, Numero de cursos: {num_cursos}")
